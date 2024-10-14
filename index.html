@@ -1,0 +1,115 @@
+<head>
+	<title>Dream2Assist</title>
+	<meta property="og:title" content="Dream2Assist">
+	<meta property="og:description" content="Dreaming to Assist: Learning to Align with Human Objectives for Shared Control in High-Speed Racing">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript">
+		function toggle(id) {
+			var e = document.getElementById(id);
+			if(e.style.display == 'block')
+				e.style.display = 'none';
+			else
+				e.style.display = 'block';
+		}
+	</script>
+</head>
+<div class="header" id="top">
+	<h1><span class="bold">Dreaming to Assist:</span><br/>Learning to Align with Human Objectives for Shared Control in High-Speed Racing</h1>
+	<h3><a href="https://openreview.net/forum?id=adf3pO9baG" class="bold default-color">CoRL 2024</span><br/></h3>
+	<table class="authors">
+		<tbody>
+			<tr>
+				<td>
+					<h4>
+						<a href="https://jadecastro.github.io" class="nobreak">Jonathan DeCastro</a>&ast;,&ensp;
+						<a class="nobreak">Andrew Silva</a>&ast;,&ensp;
+						<a class="nobreak">Deepak Gopinath</a>,&ensp;
+						<a class="nobreak">Emily Sumner</a>,&ensp;
+						<a class="nobreak">Thomas M. Balch</a>,&ensp;
+						<a class="nobreak">Laporsha Dees</a>,&ensp;
+						<a class="nobreak">Guy Rosman</a><br/>
+						<span class="authors-affiliation">Toyota Research Institute</span>
+						<span class="authors-affiliation" style="font-size: 0.85em;">&ast;Equal contribution</span>
+					</h4>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="links">
+		<a href="https://arxiv.org/abs/" class="btn"><i class="fa">&#xf1c1;</i>&ensp;Paper</a><a href="https://openreview.net/forum?id=adf3pO9baG" class="btn"><i class="fa fa-link"></i>&ensp;OpenReview</a>
+	</div>
+</div>
+<div class="content">
+	<div class="hr"></div>
+	<div class="figure" style="height: 420px; background-image: url(figures/sdm_high_level.png);"></div>
+	<div style="margin: auto; margin-top: -24px;">
+		<p>
+			<span class="bold blue">Overview.</span> <span class="bold">Dream2Assist</span> combines a rich world model able to infer human objectives and value functions from driving behaviors, and an assistive agent that provides appropriate expert assistance to a given human teammate.
+		</p>
+	</div>
+	<div class="hr"></div>
+	<div>
+		<h2>Abstract</h2>
+		<p class="abstract">
+			Tight coordination is required for effective human-robot teams in domains involving fast dynamics and tactical decisions, such as multi-car racing. In such settings, robot teammates must react to cues of a human teammate's tactical objective to assist in a way that is consistent with the objective (e.g., navigating left or right around an obstacle). To address this challenge, we present <span class="bold">Dream2Assist</span>, a framework that combines a rich world model able to infer human objectives and value functions, and an assistive agent that provides appropriate expert assistance to a given human teammate. Our approach builds on a recurrent state space model to explicitly infer human intents, enabling the assistive agent to select actions that align with the human and enabling a fluid teaming interaction. We demonstrate our approach in a high-speed racing domain with a population of synthetic human drivers pursuing mutually exclusive objectives, such as "stay-behind" and "overtake". We show that the combined human-robot team, when blending its actions with those of the human, outperforms synthetic humans alone and several baseline assistance strategies, and that intent-conditioning enables adherence to human preferences during task execution, leading to improved performance while satisfying the human's objective.
+		</p>
+	</div>
+	<div class="hr"></div>
+	<div>
+		<h2>System Architecture</h2>
+		<div class="figure-caption">
+			Training of <span class="bold">Dream2Assist</span>. Seveal pre-trained human models are trained to generate human-like driving behaviors with different objectives, which are used to train the world model of the assistant and the assistive agent policy.  The world model is trained to infer human objectives and reward function in order to provide expert assistance to a human teammate. The assistive agent is trained to provide assistance that aligns with the human's objectives, enabling a fluid teaming interaction.
+		</div>
+		<div class="figure" style="height: 250px; background-image: url(figures/ai_update_horiz.png);"></div>
+	</div>
+	<div>
+		<h2>Qualitative Results</h2>
+		<div class="figure-caption">
+			Examples of the <span class="bold">Dream2Assist</span> agent's actions when paired with a human intending to pass and a human intending to stay. Dream2Assist recognizes the driver's intent, making lateral corrections for a safer overtake (left) or throttle adjustments to stay behind the opponent while still progressing towards the finish (right), thereby helping to satisfy task and human objectives.
+		</div>
+		<div class="figure" style="height: 250px; background-image: url(figures/pass_stay_qualitative.png);"></div>
+	</div>
+	<div>
+		<h2>Skill-Based Results</h2>
+		<div class="figure-caption">
+			Change in track progress and return when adding assistance to five imperfect pass (left) and stay (right) fictitious humans in the hairpin and straightaway problem settings. The addition of <span class="bold">Dream2Assist</span> leads to higher gains in task performance and greater adherence to human objectives than baselines.
+		</div>
+		<div class="figure" style="height: 400px; background-image: url(figures/pass_stay_bars_straight_hairpin.png);"></div>
+	</div>
+	<div class="hr"></div>
+	<div>
+		<h2>Video</h2>
+		<div class="section" style=" text-align: left">
+			<div class="body">
+				<div class="video-container" style="position: relative; padding-top: 2%; margin: 0pt auto; text-align: center;">
+		<iframe width="900" height="600" src="https://www.youtube.com/embed/PVugoxqX5Co" title="YouTube video player"
+				frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="hr"></div>
+	<div style="padding-bottom: 64px; text-align: center;">
+		<h2>Citation</h2>
+		<p>
+			Please cite the paper as follows:
+		</p>
+		<div id="bibtex-text" class="bibtexsection" onClick="window.getSelection().selectAllChildren(document.getElementById('bibtex-text'));">
+@inproceedings{decastro2024dream2assist,
+	title={Dreaming to Assist: Learning to Align with Human Objectives for Shared Control in High-Speed Racing}, 
+	author={Jonathan DeCastro and Andrew Silva and Deepak Gopinath and Emily Sumner and Thomas M. Balch and Laporsha Dees and Guy Rosman},
+	booktitle={8th Conference on Robot Learning (CoRL) 2024. Munich, Germany},
+	year={2024}
+} </div>
+	</div>
+</div>
+
+<footer>
+<a href="#top"><i class="fa fa-arrow-up"></i><br/>Return to top</a>
+<div style="padding-top: 48px;">
+	<span>Website based on <a href="https://www.tdmpc2.com/">TD-MPC2</a>.</span>
+</div>
+</footer>

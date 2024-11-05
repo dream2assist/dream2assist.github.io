@@ -19,6 +19,19 @@ p {line-height: 1.4em; text-align: justify;}
 .math {font-family: "Computer Modern Sans", sans-serif; font-style: italic;}
 sub, sup {line-height: 0;}
 .figure {width: 100%; min-height: 120px; margin: 36px 0; background-repeat: no-repeat; background-position: center; background-size: contain;}
+.expandable-figure {width: 100%; min-height: 120px; margin: 36px 0; background-repeat: no-repeat; background-position: center; background-size: contain;}
+.expandable-figure:hover {
+    color: #424242; 
+    -webkit-transition: all .3s ease-in;
+    -moz-transition: all .3s ease-in;
+    -ms-transition: all .3s ease-in;
+    -o-transition: all .3s ease-in;
+    transition: all .3s ease-in;
+    opacity: 1;
+    transform: scale(1.5);
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari and Chrome */
+}
 .figure-caption {margin: auto; max-width: 95%; margin-top: 24px; margin-bottom: 24px;}
 .youtube-container {background-color: #000; margin-top: 32px;}
 .youtube {display: block; margin: auto; width: 960px; padding-top: 20px; padding-bottom: 20px;}

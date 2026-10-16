@@ -71,3 +71,30 @@ a.link-disabled {color: #ccc; pointer-events: none;}
 .spotlight {color: #ff9900;}
 .default-color {color: rgb(54, 54, 54) !important;}
 footer {background-color: #efeff3; width: 100%; margin-top: 32px; padding-top: 16px; padding-bottom: 16px; text-align: center;}
+
+/* latest-results card */
+.latest {max-width: 760px; margin: 32px auto 0; padding: 18px 24px 22px; border: 1px solid #cfe0f7; background: #f2f7fe; border-radius: 12px; text-align: left;}
+.latest-tag {display: inline-block; font-size: 0.8em; font-weight: bold; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: #2773d6; border-radius: 4px; padding: 2px 8px; margin-bottom: 8px;}
+.latest p {margin: 0 0 12px 0; text-align: left;}
+.latest-stats {list-style: none; margin: 0 0 16px 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 24px;}
+.latest-stats li {flex: 1 1 200px; font-size: 0.92em; line-height: 1.35em;}
+.latest-stats .n {display: block; font-size: 1.5em; font-weight: bold; color: #2773d6; line-height: 1.2em;}
+.latest .btn {margin: 0;}
+
+/* responsive embeds and small screens */
+iframe.yt {width: 100%; max-width: 900px; height: auto; aspect-ratio: 16 / 9; border: 0;}
+@media (max-width: 1000px) {
+  .content {padding-left: 16px; padding-right: 16px; box-sizing: border-box;}
+  .header {padding-left: 16px; padding-right: 16px; box-sizing: border-box;}
+}
+@media (max-width: 640px) {
+  h1 {font-size: 1.6em;}
+  .links a {display: inline-block; margin: 4px;}
+  .figure {margin: 20px 0; height: 210px !important;}
+  .expandable-figure:hover {transform: none;}
+}
+.bibtexsection {overflow-x: auto;}
+@media (max-width: 640px) {
+  p {text-align: left;}
+  .figure-caption {line-height: 1.4em; max-width: 100%;}
+}

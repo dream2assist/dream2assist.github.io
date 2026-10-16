@@ -1,8 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Dream2Assist</title>
 	<meta property="og:title" content="Dream2Assist">
+	<meta name="description" content="Dreaming to Assist: Learning to Align with Human Objectives for Shared Control in High-Speed Racing (CoRL 2024), with a link to the extended version.">
 	<meta property="og:description" content="Dreaming to Assist: Learning to Align with Human Objectives for Shared Control in High-Speed Racing">
-	<link rel="stylesheet" href="style.css">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://dream2assist.github.io/">
+	<meta property="og:image" content="https://dream2assist.github.io/figures/sdm_high_level.png">
+	<meta name="twitter:card" content="summary_large_image">
+	<link rel="stylesheet" href="style.css?v=2">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript">
@@ -15,9 +24,10 @@
 		}
 	</script>
 </head>
+<body>
 <div class="header" id="top">
 	<h1><span class="bold">Dreaming to Assist:</span><br/>Learning to Align with Human Objectives for Shared Control in High-Speed Racing</h1>
-	<h3><a href="https://openreview.net/forum?id=adf3pO9baG" class="bold default-color">CoRL 2024</span><br/></h3>
+	<h3><a href="https://openreview.net/forum?id=adf3pO9baG" class="bold default-color">CoRL 2024</a></h3>
 	<table class="authors">
 		<tbody>
 			<tr>
@@ -38,12 +48,22 @@
 		</tbody>
 	</table>
 	<div class="links">
-		<a href="https://arxiv.org/abs/2410.10062" class="btn"><i class="fa">&#xf1c1;</i>&ensp;Paper</a><a href="https://openreview.net/forum?id=adf3pO9baG" class="btn"><i class="fa fa-link"></i>&ensp;OpenReview</a><a href="https://github.com/ToyotaResearchInstitute/dream2assist" class="btn"><i class="fa fa-github"></i>&ensp;Code</a>
+		<a href="https://arxiv.org/abs/2410.10062" class="btn"><i class="fa">&#xf1c1;</i>&ensp;Paper</a><a href="https://openreview.net/forum?id=adf3pO9baG" class="btn"><i class="fa fa-link"></i>&ensp;OpenReview</a><a href="https://github.com/ToyotaResearchInstitute/dream2assist" class="btn"><i class="fa fa-github"></i>&ensp;Code</a><a href="extended/" class="btn btn-blue"><i class="fa fa-link"></i>&ensp;Extended version</a>
+	</div>
+	<div class="latest">
+		<div class="latest-tag">Latest results</div>
+		<p><span class="bold">Extended version:</span> <a href="extended/">Dream to Assist: Intent-Conditioned World Models for Shared Vehicle Control</a>. This page describes the original CoRL 2024 paper. The extended version adds human-subjects studies in racing and urban driving and an on-vehicle deployment.</p>
+		<ul class="latest-stats">
+			<li><span class="n">+52%</span> steering events aligned with the driver's chosen side</li>
+			<li><span class="n">3.1% vs 8.5%</span> of trials with a collision, with vs without intent</li>
+			<li><span class="n">0</span> retraining steps to move from simulation to a real test vehicle</li>
+		</ul>
+		<a href="extended/" class="btn btn-blue">See the latest results</a>
 	</div>
 </div>
 <div class="content">
 	<div class="hr"></div>
-	<div class="figure" style="height: 420px; background-image: url(figures/sdm_high_level.png);"></div>
+	<div class="figure" role="img" aria-label="Overview of Dream2Assist: a world model that infers human objectives and an assistive agent that helps the human teammate" style="height: 420px; background-image: url(figures/sdm_high_level.png);"></div>
 	<div style="margin: auto; margin-top: -24px;">
 		<p>
 			<span class="bold blue">Overview.</span> <span class="bold">Dream2Assist</span> combines a rich world model able to infer human objectives and value functions from driving behaviors, and an assistive agent that provides appropriate expert assistance to a given human teammate.
@@ -60,23 +80,23 @@
 	<div>
 		<h2>System Architecture</h2>
 		<div class="figure-caption">
-			Training of <span class="bold">Dream2Assist</span>. Seveal pre-trained human models are trained to generate human-like driving behaviors with different objectives, which are used to train the world model of the assistant and the assistive agent policy.  The world model is trained to infer human objectives and reward function in order to provide expert assistance to a human teammate. The assistive agent is trained to provide assistance that aligns with the human's objectives, enabling a fluid teaming interaction.
+			Training of <span class="bold">Dream2Assist</span>. Several pre-trained human models are trained to generate human-like driving behaviors with different objectives, which are used to train the world model of the assistant and the assistive agent policy.  The world model is trained to infer human objectives and reward function in order to provide expert assistance to a human teammate. The assistive agent is trained to provide assistance that aligns with the human's objectives, enabling a fluid teaming interaction.
 		</div>
-		<div class="figure" style="height: 250px; background-image: url(figures/ai_update_horiz.png);"></div>
+		<div class="figure" role="img" aria-label="Training of Dream2Assist: pre-trained human models train the assistant world model and the assistive policy" style="height: 250px; background-image: url(figures/ai_update_horiz.png);"></div>
 	</div>
 	<div>
 		<h2>Qualitative Results</h2>
 		<div class="figure-caption">
 			Examples of the <span class="bold">Dream2Assist</span> agent's actions when paired with a human intending to pass and a human intending to stay. Dream2Assist recognizes the driver's intent, making lateral corrections for a safer overtake (left) or throttle adjustments to stay behind the opponent while still progressing towards the finish (right), thereby helping to satisfy task and human objectives.
 		</div>
-		<div class="figure" style="height: 250px; background-image: url(figures/pass_stay_qualitative.png);"></div>
+		<div class="figure" role="img" aria-label="Examples of the assistant helping a human who intends to pass, and a human who intends to stay behind" style="height: 250px; background-image: url(figures/pass_stay_qualitative.png);"></div>
 	</div>
 	<div>
 		<h2>Skill-Based Results</h2>
 		<div class="figure-caption">
 			Change in track progress and return when adding assistance to five imperfect pass (left) and stay (right) fictitious humans in the hairpin and straightaway problem settings. The addition of <span class="bold">Dream2Assist</span> leads to higher gains in task performance and greater adherence to human objectives than baselines.
 		</div>
-		<div class="figure" style="height: 400px; background-image: url(figures/pass_stay_bars_straight_hairpin.png);"></div>
+		<div class="figure" role="img" aria-label="Bar charts of change in track progress and return with assistance, for pass and stay humans on the hairpin and straightaway" style="height: 400px; background-image: url(figures/pass_stay_bars_straight_hairpin.png);"></div>
 	</div>
 	<div class="hr"></div>
 	<div>
@@ -84,7 +104,7 @@
 		<div class="section" style=" text-align: left">
 			<div class="body">
 				<div class="video-container" style="position: relative; padding-top: 2%; margin: 0pt auto; text-align: center;">
-		<iframe width="900" height="600" src="https://www.youtube.com/embed/PVugoxqX5Co" title="YouTube video player"
+		<iframe class="yt" src="https://www.youtube.com/embed/PVugoxqX5Co" title="Dream2Assist video 1" loading="lazy"
 				frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowfullscreen></iframe>
 				</div>
@@ -93,7 +113,7 @@
 		<div class="section" style=" text-align: left">
 			<div class="body">
 				<div class="video-container" style="position: relative; padding-top: 2%; margin: 0pt auto; text-align: center;">
-		<iframe width="900" height="600" src="https://www.youtube.com/embed/IpjMIC4NtLU" title="YouTube video player"
+		<iframe class="yt" src="https://www.youtube.com/embed/IpjMIC4NtLU" title="Dream2Assist video 2" loading="lazy"
 				frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowfullscreen></iframe>
 				</div>
@@ -103,7 +123,7 @@
 	<div class="hr"></div>
 	<div>
 		<h2>Poster</h2>
-		<div class="expandable-figure" style="height: 650px; background-image: url(figures/DeCastro_poster_CoRL.png);"></div>
+		<div class="expandable-figure" role="img" aria-label="CoRL 2024 poster for Dream2Assist" style="height: 650px; background-image: url(figures/DeCastro_poster_CoRL.png);"></div>
 	</div>
 	<div class="hr"></div>
 	<div style="padding-bottom: 64px; text-align: center;">
@@ -127,3 +147,5 @@
 	<span>Website based on <a href="https://www.tdmpc2.com/">TD-MPC2</a>.</span>
 </div>
 </footer>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dream to Assist (Extended)</title>
+<meta name="description" content="Dream to Assist: Intent-Conditioned World Models for Shared Vehicle Control. Project page for the extended version of Dream2Assist.">
+<meta property="og:title" content="Dream to Assist: Intent-Conditioned World Models for Shared Vehicle Control">
+<meta property="og:description" content="An assistive policy that infers what the driver is trying to do and steers with them, evaluated in racing, urban driving, and on a real test vehicle.">
+<meta property="og:type" content="website">
+<!-- TODO: replace with the final page URL and a 1200x630 preview image once available -->
+<meta property="og:url" content="https://dream2assist.github.io/extended/">
+<meta property="og:image" content="https://dream2assist.github.io/extended/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root {
+  --bg: #fbfaf8;
+  --surface: #ffffff;
+  --ink: #1d2024;
+  --muted: #5d636b;
+  --line: #e3e0da;
+  --accent: #1f5fa8;
+  --accent-ink: #ffffff;
+  --intent: #1f6fb0;
+  --nointent: #d97b2d;
+  --warn-bg: #fff6e6;
+  --warn-line: #f0d9a8;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(20,20,20,.05), 0 6px 20px rgba(20,20,20,.05);
+  --serif: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161a; --surface: #1c1f24; --ink: #e9e8e5; --muted: #a0a6ae; --line: #2d3138;
+    --accent: #6aa8ee; --accent-ink: #0d1117; --intent: #6aa8ee; --nointent: #f0a15e;
+    --warn-bg: #2a2418; --warn-line: #4a3f25; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14161a; --surface: #1c1f24; --ink: #e9e8e5; --muted: #a0a6ae; --line: #2d3138;
+  --accent: #6aa8ee; --accent-ink: #0d1117; --intent: #6aa8ee; --nointent: #f0a15e;
+  --warn-bg: #2a2418; --warn-line: #4a3f25; --shadow: none;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.6; font-size: 17px; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-underline-offset: 3px; }
+img, video { max-width: 100%; display: block; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+.narrow { max-width: 740px; margin-left: auto; margin-right: auto; }
+
+/* nav */
+.topnav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topnav .wrap { display: flex; gap: 18px; align-items: center; height: 48px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+.topnav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+.topnav a:hover { color: var(--ink); }
+.topnav .brand { color: var(--ink); font-weight: 650; margin-right: 6px; }
+.topnav .spacer { flex: 1; }
+.topnav button { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 3px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+
+/* hero */
+header.hero { padding: 56px 0 28px; text-align: center; }
+.kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 0 auto 18px; max-width: 860px; letter-spacing: -.01em; }
+.authors { font-size: 17px; max-width: 860px; margin: 0 auto; }
+.authors span { white-space: nowrap; }
+.authors sup { color: var(--muted); font-size: 11px; }
+.affil { color: var(--muted); font-size: 14px; margin-top: 10px; }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 26px 0 0; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 550; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { color: var(--accent-ink); filter: brightness(1.08); }
+.btn.soon { opacity: .55; cursor: default; pointer-events: none; }
+.btn.soon::after { content: "soon"; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; margin-left: 2px; }
+.legacy { margin: 22px auto 0; max-width: 640px; font-size: 14.5px; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); padding: 10px 14px; }
+
+/* sections */
+section { padding: 44px 0 8px; }
+h2 { font-family: var(--serif); font-size: 29px; line-height: 1.25; margin: 0 0 14px; letter-spacing: -.005em; }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+p { margin: 0 0 14px; }
+.lede { font-size: 19px; line-height: 1.55; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+figure { margin: 22px 0; }
+figure img, figure video { border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); width: 100%; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+figcaption b { color: var(--ink); }
+.fig-plain img { background: #fff; padding: 8px; }
+
+/* side by side */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pair figure { margin: 0; }
+.tag { display: inline-block; font-size: 12px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; color: #fff; }
+.tag.intent { background: var(--intent); }
+.tag.nointent { background: var(--nointent); color: #1d1100; }
+@media (max-width: 680px) { .pair { grid-template-columns: 1fr; } }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 26px 0 6px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 14px; box-shadow: var(--shadow); }
+.stat .n { font-family: var(--serif); font-size: 30px; font-weight: 700; line-height: 1.1; color: var(--accent); }
+.stat .l { font-size: 14px; line-height: 1.4; margin-top: 6px; }
+.stat .s { font-size: 12px; color: var(--muted); margin-top: 6px; }
+@media (max-width: 860px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* callouts */
+.callout { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 14px 18px; margin: 20px 0; }
+.callout.warn { background: var(--warn-bg); border-color: var(--warn-line); border-left-color: var(--nointent); }
+.callout p:last-child { margin-bottom: 0; }
+.callout h3 { margin-top: 0; }
+blockquote { margin: 16px 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--line); font-family: var(--serif); font-size: 18px; }
+blockquote footer { font-family: var(--sans); font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* table */
+.tablewrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 560px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); background: color-mix(in srgb, var(--surface) 70%, var(--bg)); }
+tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+ul.tight { padding-left: 20px; margin: 0 0 14px; }
+ul.tight li { margin: 4px 0; }
+.eq { font-family: var(--serif); font-size: 17px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; overflow-x: auto; text-align: center; margin: 16px 0; }
+.eq i { font-style: italic; }
+.eq .katex { font-size: 1.12em; }
+.eq .katex-display { margin: 0; }
+
+/* video slots */
+.vslot { position: relative; aspect-ratio: 16 / 9; }
+.vslot iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: var(--radius); }
+.vgrid { display: grid; gap: 22px; }
+
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.5; margin: 12px 0; }
+.copy { float: right; font-size: 12px; background: none; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); padding: 2px 8px; cursor: pointer; margin: 6px 6px 0 0; }
+
+footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px 0 50px; color: var(--muted); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+</head>
+<body>
+
+<nav class="topnav" aria-label="Sections">
+  <div class="wrap">
+    <a class="brand" href="#top">Dream2Assist</a>
+    <a href="#abstract">Abstract</a>
+    <a href="#method">Method</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#studies">Studies</a>
+    <a href="#racing">Racing</a>
+    <a href="#urban">Urban</a>
+    <a href="#grip">GRIP</a>
+    <a href="#videos">Videos</a>
+    <a href="#cite">Cite</a>
+    <span class="spacer"></span>
+    <button id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
+  </div>
+</nav>
+
+<main id="top">
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Extended version of the CoRL 2024 paper</div>
+    <h1>Dream to Assist: Intent-Conditioned World Models for Shared Vehicle Control</h1>
+    <p class="authors">
+      <span>Jonathan DeCastro<sup>1</sup></span>,
+      <span>Thomas Balch<sup>1</sup></span>,
+      <span>Emily Sumner<sup>1</sup></span>,
+      <span>Deepak Gopinath<sup>1</sup></span>,
+      <span>Laporsha Dees<sup>1</sup></span>,
+      <span>Patricio Reyes Gomez<sup>1</sup></span>,
+      <span>Elliot Weiss<sup>2</sup></span>,
+      <span>Megan Applegate-Kenton<sup>1</sup></span>,
+      <span>Todd Rowell<sup>1</sup></span>,
+      <span>John Leonard<sup>3</sup></span>,
+      <span>Avinash Balachandran<sup>2</sup></span>,
+      <span>Guy Rosman<sup>1</sup></span>
+    </p>
+    <p class="affil"><sup>1</sup>Toyota Research Institute, Cambridge, MA &nbsp;·&nbsp; <sup>2</sup>Toyota Research Institute, Los Altos, CA &nbsp;·&nbsp; <sup>3</sup>Massachusetts Institute of Technology</p>
+    <p class="affil">Contact: Jonathan DeCastro, <a href="mailto:jonathan.decastro@tri.global">jonathan.decastro@tri.global</a></p>
+
+    <div class="links">
+      <!-- TODO: set hrefs and remove class "soon" as each becomes available -->
+      <a class="btn primary soon" href="#" id="link-paper">Extended paper</a>
+      <a class="btn soon" href="#" id="link-arxiv">arXiv</a>
+      <a class="btn" href="https://github.com/ToyotaResearchInstitute/dream2assist">Code (CoRL version)</a>
+      <a class="btn" href="#videos">Videos</a>
+      <a class="btn" href="#cite">BibTeX</a>
+    </div>
+
+    <p class="legacy">Looking for the conference paper? <a href="https://dream2assist.github.io/">Dreaming to Assist (CoRL 2024)</a> has its own page. This page covers the extended version, which adds human-subjects studies and an on-vehicle deployment.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- HERO MEDIA -->
+<figure>
+  <div class="pair">
+    <figure>
+      <span class="tag intent">With intent</span>
+      <video class="loopvid" muted loop playsinline preload="metadata" poster="img/hero_firstperson.jpg" aria-label="Driver's-eye view of the intent-conditioned assistant guiding the car around an oncoming vehicle">
+        <source src="video/hero_firstperson.mp4" type="video/mp4">
+      </video>
+      <figcaption><b>Oncoming car.</b> The assistant helps steer around a wrong-way vehicle.</figcaption>
+    </figure>
+    <figure>
+      <span class="tag intent">With intent</span>
+      <video class="loopvid" muted loop playsinline preload="metadata" poster="img/hero_popout.jpg" aria-label="Driver's-eye view of the intent-conditioned assistant as a car backs out of a driveway">
+        <source src="video/hero_popout.mp4" type="video/mp4">
+      </video>
+      <figcaption><b>Driveway pop-out.</b> A car backs out of a driveway ahead, and the ego car slows to let it clear.</figcaption>
+    </figure>
+  </div>
+  <figcaption><b>The assistant in action.</b> Driver's-eye views from runs on <a href="https://medium.com/toyotaresearch/global-research-innovation-platform-grip-c25c3419c72c">GRIP</a> (Toyota's Global Research Innovation Platform) with the intent-conditioned assistant. The green dashed line is the assistant's planned path several seconds ahead. The driver also feels its steering input as torque through the wheel, and can follow or override it at any time.</figcaption>
+</figure>
+
+<div class="stats">
+  <div class="stat"><div class="n">+52%</div><div class="l">more steering events aligned with the driver's chosen side</div><div class="s">215 vs 141, urban A/B</div></div>
+  <div class="stat"><div class="n">3.1% vs 8.5%</div><div class="l">of trials with a collision, intent vs no intent</div><div class="s">4/131 vs 10/118 trials</div></div>
+  <div class="stat"><!-- TODO: paper reports both 81%→90% (Sec. 6, Table 4, App. D.1) and 80%→88% (Sec. 7.1); reconcile during revision -->
+    <div class="n">80% → 88%</div><div class="l">overtake success on racing straights</div><div class="s">N = 24, trend (p = .069)</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">retraining steps from simulator to the GRIP test vehicle</div><div class="s">feasibility, N = 3</div></div>
+</div>
+
+<!-- ABSTRACT -->
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p>Assistive agents in shared-control settings face a dual challenge: acting proactively to align with the human's intentions while remaining legible enough for the human to comprehend and fluently respond in real time. We present Dream2Assist, a model-based reinforcement learning framework for tightly-coupled shared decision making that addresses both sides of this challenge. Our approach extends a recurrent state-space world model with intent inference, enabling an assistive policy trained via fictitious co-play with the human to anticipate and support discrete human objectives without overriding human agency.</p>
+  <p>Beyond the computational framework, we describe the full deployment pipeline needed to translate a world-model-based policy into a safe, human-centered system in a resource-efficient way. Crucially, we address the sim-to-real-human gap via policy down-selection and reward restructuring within an iterative human-machine interface design. We validate the framework through three human-subjects studies and a preliminary on-vehicle deployment spanning two qualitatively distinct domains: high-speed racing (N = 30) and urban driving with richer intent structure (N = 10). Our results demonstrate that intent conditioning yields measurable improvements in torque alignment and collision rate. We surface key design insights and practices for deploying learning-based assistive agents in safety-critical, real-time human-robot teaming.</p>
+</section>
+
+<!-- METHOD -->
+<section id="method">
+  <h2>Method: a world model that knows what you are trying to do</h2>
+  <p class="lede">Dream2Assist gives an assistant a latent model of its human partner. The assistant reads the driver's behavior, infers a discrete objective such as <em>pass</em> versus <em>stay behind</em>, or <em>left</em> versus <em>right</em> around a hazard, and shapes its assistance to fit.</p>
+
+  <figure class="fig-plain">
+    <img src="img/rssm.png" alt="Diagram of the Dream2Assist recurrent state-space model with fictitious co-play on the left and the assistant's sequence model on the right" loading="lazy">
+    <figcaption><b>Architecture.</b> Human and assistant actions are blended linearly. For both agents a multi-head recurrent state-space model predicts observations and reward. For the assistant it also predicts the human's intent. The intent head is trained against labels from frozen human policies, and the assistant's reward is shaped by the optimal policy and reward for the inferred intent.</figcaption>
+  </figure>
+
+  <div class="narrow">
+    <h3>Three ingredients</h3>
+    <ul class="tight">
+      <li><b>Intent-aware world model.</b> A DreamerV3-style RSSM with an added intent predictor on the assistant's latent state. The inferred intent is re-estimated at every step from a window of latent states, so it can follow changes during an episode.</li>
+      <li><b>Fictitious co-play.</b> The assistant trains alongside a population of simulated drivers with different objectives and different skill levels, taken from checkpoints along their own training. The assistant learns to cope with imperfect partners, and learns to tell the intents apart.</li>
+      <li><b>Value-aligned reward.</b> The assistant is rewarded for the task, penalized for the size of its own intervention, and rewarded for acting like an expert that shares the inferred intent.</li>
+    </ul>
+
+    <div class="eq tex" data-display="1" data-tex="r^{A}_{t} = r^{\mathrm{task}}_{t} + r^{\mathrm{interv}}_{t} + \alpha_r\, \hat{r}^{*}\!\left(\hat{y}^{A}_{t}\right) + \alpha_a \left\lVert \mathbf{a}^{H}_{t} + \mathbf{a}^{A}_{t} - \mathbf{a}^{*}\!\left(\hat{y}^{A}_{t}\right) \right\rVert_{2}" role="math" aria-label="Assistant reward equals task reward plus intervention penalty plus expert alignment terms">
+      <i>r</i><sup>A</sup><sub><i>t</i></sub> = <i>r</i><sup>task</sup><sub><i>t</i></sub> + <i>r</i><sup>interv</sup><sub><i>t</i></sub> + α<sub><i>r</i></sub> <i>r̂</i>*(<i>ŷ</i><sup>A</sup><sub><i>t</i></sub>) + α<sub><i>a</i></sub> ‖<b>a</b><sup>H</sup><sub><i>t</i></sub> + <b>a</b><sup>A</sup><sub><i>t</i></sub> − <b>a</b>*(<i>ŷ</i><sup>A</sup><sub><i>t</i></sub>)‖<sub>2</sub>
+    </div>
+    <p class="small muted">Here <span class="tex" data-tex="\hat{y}^{A}">ŷ<sup>A</sup></span> is the inferred intent, <span class="tex" data-tex="\hat{r}^{*}"><i>r̂</i>*</span> the reward an intent-aligned expert would receive, and <span class="tex" data-tex="\mathbf{a}^{*}"><b>a</b>*</span> the action that expert would take. All evaluations in the paper use the reward-only variant (<span class="tex" data-tex="\alpha_r = 1,\ \alpha_a = 0"><i>α<sub>r</sub></i> = 1, <i>α<sub>a</sub></i> = 0</span>).</p>
+
+    <div class="callout">
+      <h3>Defaults to light assistance, by construction</h3>
+      <p>Assistance stays light in two situations. If the driver is already driving the way an intent-aligned expert would, there is little to correct, and the intervention penalty keeps the assistant's input small. If the system is uncertain which intent the driver holds, the intent-conditioned reward terms approximately cancel, leaving the task reward and the intervention penalty, so the assistant again intervenes less. In between, assistance ramps up as the driver's behavior departs from what the expert for the inferred intent would do, and ramps down as the system becomes more uncertain of the driver's intent. No special case is coded for any of this. It follows from the shape of the reward.</p>
+    </div>
+
+    <h3>Safety layer</h3>
+    <p>A control-barrier-function filter sits on top of the learned policy and activates only near a constraint boundary. In the human studies reported here it was applied to the trajectory visualization shown to the driver, not to the assistive torque, in order to isolate the effect of intent conditioning on the torque itself.</p>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline">
+  <h2>From simulation to a system people can use</h2>
+  <p>A policy that works with simulated partners is not yet a system that works with people. The paper contributes a deployment pipeline that combines automated policy screening, counterfactual log replay, and human-in-the-loop vetting with an interface-design process that is resolved before policy quality is formally evaluated.</p>
+  <figure class="fig-plain">
+    <img src="img/workflow.png" alt="Workflow diagram showing iterative policy refinement and iterative interface piloting" loading="lazy">
+    <figcaption><b>Workflow.</b> Iterative refinement and selection of policy choices run together with iterative piloting of the overall policy and interface behavior.</figcaption>
+  </figure>
+</section>
+
+<!-- STUDIES -->
+<section id="studies">
+  <h2>Two domains, three studies, one on-vehicle deployment</h2>
+  <figure>
+    <img src="img/domains.jpg" alt="Left: CARLA racing scene at Thunderhill. Right: top-down view of the Unreal Engine town map" loading="lazy">
+    <figcaption><b>Racing</b> (left, CARLA, Thunderhill Raceway West track) is fast and time-pressured with two intents: pass or stay behind. <b>Urban</b> (right, Unreal Engine town map, 70 × 70 m) is surprise-rich, with a wrong-way vehicle, a driveway pop-out, and a roundabout. Urban intents are left or right around the hazard in the studies reported here.</figcaption>
+  </figure>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Study</th><th class="num">N</th><th>Comparison</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><b>Eval 1</b> Racing characterization</td><td class="num">24</td><td>Assisted vs unassisted</td><td>Characterize shared control across track geometries and identify where to refine</td></tr>
+        <tr><td><b>Eval 2</b> Racing refinement</td><td class="num">6</td><td>Refined vs initial policy, within subjects</td><td>Check that targeted refinements improved the Eval 1 turn behavior</td></tr>
+        <tr><td><b>Eval 3</b> Urban validation</td><td class="num">10</td><td>Intent vs no intent, double-blind A/B</td><td>Isolate the contribution of intent conditioning</td></tr>
+        <tr><td><b>GRIP</b> Test vehicle (VR)</td><td class="num">3</td><td>Intent vs no intent</td><td>Feasibility of transfer with no retraining</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small muted">Drivers see the assistant's planned path as a green dashed line ahead of the car and feel its steering input as torque on the wheel. Steering is coupled: the road wheels follow the steering wheel, and the assistant communicates by applying torque the driver can follow or override at any time. Throttle and brake are uncoupled, so the driver does not feel longitudinal assistance through the pedals.</p>
+</section>
+
+<!-- RACING -->
+<section id="racing">
+  <h2>Racing: strong on straights, and a clear path on turns</h2>
+
+  <h3>Eval 1: characterization (N = 24)</h3>
+  <p>Drivers attempted eight overtakes of increasing difficulty, each with and without assistance. On straights, assistance raised overtake success from 80% to 88% (p = .069) and increased both overtake speed and minimum clearance to the opponent. Turns were harder: overtake success was lower with assistance (about 55% without, about 27% with), as was clearance. Inspecting the assistive inputs pointed to over-steering just before the turn, which gave us a specific target for refinement.</p>
+  <figure class="fig-plain">
+    <img src="img/eval1_overtake_by_track.png" alt="Bar chart of mean overtake rate by track type for no policy and policy" loading="lazy" style="max-width:520px;margin:auto">
+    <figcaption><b>Overtake rate by track type</b> in Eval 1. Assistance helped on straights, and turns revealed what to refine.</figcaption>
+  </figure>
+  <figure>
+    <div class="pair">
+      <figure>
+        <video class="loopvid" muted loop playsinline preload="metadata" poster="img/racing_loop.jpg" aria-label="Participant overtaking the lead car on a straight in the racing simulator"><source src="video/racing_loop.mp4" type="video/mp4"></video>
+        <figcaption><b>Straights: the pass succeeds.</b> A participant closes on the lead car and passes it.</figcaption>
+      </figure>
+      <figure>
+        <video class="loopvid" muted loop playsinline preload="metadata" poster="img/racing_turn.jpg" aria-label="Participant following the lead car through a turn without completing a pass"><source src="video/racing_turn.mp4" type="video/mp4"></video>
+        <figcaption><b>Turns: harder.</b> A participant follows the lead car through a turn without completing the pass.</figcaption>
+      </figure>
+    </div>
+    <figcaption><b>Racing study, Eval 1.</b> Two excerpts from Video 1, matching the straight-versus-turn split in the chart above.</figcaption>
+  </figure>
+  <p>Participants rated the assistant as understanding their intent to pass well above neutral (about 5.3 on a 7-point scale, p &lt; .001), and safety was rated above neutral overall and clearly so on straights. Helpfulness and safety ratings followed the same straight-versus-turn split as the objective results.</p>
+
+  <div class="callout">
+    <h3>What the turn results taught us</h3>
+    <p>The simulated partners steered more aggressively, and more repeatably, in turns than real people do. The world model learned overly aggressive turn dynamics from them, which produced steering over-compensation. That diagnosis directly shaped the refinements in Eval 2.</p>
+  </div>
+
+  <h3>Eval 2: targeted refinement (N = 6)</h3>
+  <p>The refinements were human-data augmentation, output smoothing, and reward restructuring that penalizes collapse to a single intent. The refinements moved the policy in the intended direction: net intent-aligned steering torque improved by about 1.1 Nm (paired t-test, p = .049), the refined policy was preferred on 16 of 27 trials and on a majority of turn trials, and likability rose (3.31 vs 2.95). The pilot is small and aimed at direction rather than significance, so the likability and preference differences are not statistically significant.</p>
+  <figure class="fig-plain">
+    <img src="img/eval2_torque_traces.png" alt="Event-locked average torque traces for the initial and refined policies leading up to an overtake" loading="lazy" style="max-width:640px;margin:auto">
+    <figcaption><b>Torque leading up to the overtake</b> (time-aligned at t = 0). The refined policy produces more intent-aligned torque and less intent-opposing torque than the initial one.</figcaption>
+  </figure>
+</section>
+
+<!-- URBAN -->
+<section id="urban">
+  <h2>Urban: isolating the effect of intent</h2>
+  <p class="lede">Eval 3 is the cleanest test. Same architecture, same rewards, same safety layer, and the intent predictor is the only difference. Participants did not know which assistant they were driving.</p>
+
+  <h3>The hazards, driven without assistance</h3>
+  <p>Two of the surprise events in the town scenario, shown with a person driving without the assistant. These are human-driven runs from our CompactSim setup.</p>
+  <!-- TODO (optional): add unassisted collision/near-miss counts for these two events once the annotate-compile-train numbers are final. -->
+  <div class="pair" style="margin:22px 0">
+    <figure>
+      <video class="loopvid" muted loop playsinline preload="metadata" poster="img/compactsim_oncoming.jpg" aria-label="Unassisted human driving: oncoming vehicle"><source src="video/compactsim_oncoming.mp4" type="video/mp4"></video>
+      <figcaption><b>Oncoming vehicle.</b> A wrong-way car approaches in the driver's lane and the driver must choose a side. Human driver, no assistant, CompactSim.</figcaption>
+    </figure>
+    <figure>
+      <video class="loopvid" muted loop playsinline preload="metadata" poster="img/compactsim_roundabout.jpg" aria-label="Unassisted human driving: roundabout approach"><source src="video/compactsim_roundabout.mp4" type="video/mp4"></video>
+      <figcaption><b>Roundabout approach.</b> A crossing vehicle at the roundabout entry. Human driver, no assistant, CompactSim.</figcaption>
+    </figure>
+  </div>
+
+  <h3>Same scenario, two assistants</h3>
+  <figure>
+  <div class="pair">
+    <figure>
+      <span class="tag nointent">No intent</span>
+      <video class="loopvid" muted loop playsinline preload="metadata" poster="img/urban_nointent.jpg" aria-label="Participant driving with the no-intent assistant">
+        <source src="video/urban_nointent.mp4" type="video/mp4">
+      </video>
+    </figure>
+    <figure>
+      <span class="tag intent">With intent</span>
+      <video class="loopvid" muted loop playsinline preload="metadata" poster="img/urban_withintent.jpg" aria-label="Participant driving with the intent-conditioned assistant">
+        <source src="video/urban_withintent.mp4" type="video/mp4">
+      </video>
+    </figure>
+  </div>
+  <!-- TODO: confirm these two clips show the same participant and scenario before keeping this caption -->
+  <figcaption><b>Double-blind A/B.</b> A participant steers around an oncoming vehicle with the assistant that does not infer intent (left) and with the intent-conditioned assistant (right). Both use the same task rewards and architecture. The only difference is the intent head.</figcaption>
+</figure>
+
+  <div class="pair" style="margin:22px 0">
+    <figure class="fig-plain">
+      <img src="img/fig_torque_alignment_total_all12.png" alt="Bar chart of torque alignment events: 215 with intent, 141 without, plus 52 percent" loading="lazy" style="max-height:420px;width:auto;margin:auto">
+      <figcaption><b>Alignment.</b> Torque-alignment events with the driver's chosen side: 215 vs 141 (+52%).</figcaption>
+    </figure>
+    <figure class="fig-plain">
+      <img src="img/fig_collision_rate.png" alt="Bar chart of collision rate: 3.1 percent with intent, 8.5 percent without intent, 0 percent with no policy" loading="lazy" style="max-height:420px;width:auto;margin:auto">
+      <figcaption><b>Collisions.</b> 3.1% (4/131) with intent, 8.5% (10/118) without, and 0% (0/66) with no assistance.</figcaption>
+    </figure>
+  </div>
+
+  <div class="callout">
+    <h3>Steers with the driver, and collisions more than halved</h3>
+    <p>With intent, the assistant steers with the driver and responds earlier, before the oncoming car passes. Without intent, it steers against the driver's chosen direction on average (see the torque traces for participant 03 below).</p>
+    <p>Conditioning on intent cut collisions from 8.5% to 3.1% relative to the otherwise identical no-intent assistant. The unassisted baseline recorded none. We attribute the remaining assisted collisions to a mix of risk compensation (people drove more aggressively when assisted) and residual policy errors at close range, and separating the two is a natural next step.</p>
+  </div>
+
+  <figure class="fig-plain">
+    <img src="img/eval3_p03_traces.png" alt="Averaged torque traces for participant 03 during the oncoming-car event, with and without intent" loading="lazy" style="max-width:640px;margin:auto">
+    <figcaption><b>One driver, one event.</b> Averaged torque for participant 03 as an oncoming car approaches (time-aligned at t = 0). Before the closest approach the no-intent policy steers, on average, against the driver's goal, while the intent-conditioned policy rises above neutral earlier.</figcaption>
+  </figure>
+
+  <h3>Ratings reveal individual preferences</h3>
+  <p>Mean ratings were similar for the two assistants (about 6.1 vs 6.2 out of 10), with no significant difference on any of seven Likert dimensions. The averages hide a real split: drivers divided almost evenly, and each assistant had clear fans. The largest single-driver difference (2.75 points) is more than twenty times the change in the mean, which makes personalization a promising direction.</p>
+  <figure class="fig-plain">
+    <img src="img/fig_same_drivers_two_pictures.png" alt="Two panels of per-participant lines. Left: torque-alignment events, with intent higher for most participants. Right: overall rating, split between participants." loading="lazy">
+    <figcaption><b>Same drivers, two pictures.</b> Left: torque alignment per participant favors the intent-conditioned assistant. Right: overall ratings scatter in both directions around a flat mean. These panels use the 10 analyzed participants, so the totals differ from the all-participant counts above.</figcaption>
+  </figure>
+
+  <p>Open-ended feedback did separate the two policies, and the comments show the disagreement directly:</p>
+  <blockquote>"[No intent] felt like a captain with too much pushback on the wheel, while [with intent] felt like a copilot helping me out rather than forcing decisions."<footer>Participant P08</footer></blockquote>
+  <blockquote>"[No intent] was better. After it corrected to where I was going, I liked it better than [with intent]. I had to fight with it less."<footer>Participant P01</footer></blockquote>
+  <p>Directional consistency matters more to some drivers than firm correction does. This points toward assistants that adapt their intervention style to the individual.</p>
+
+</section>
+
+<!-- GRIP -->
+<section id="grip">
+  <h2>GRIP: a first step onto a real vehicle</h2>
+  <p>We ran the urban scenario on GRIP, a real test vehicle on a track that emulates the simulator's vehicle dynamics, with the driving scene rendered in VR and force-feedback steering. The driver feels the car's actual motion. The same policy weights and intent space as Eval 3 were used, with minimal parameter changes for the steering hardware and <b>no retraining</b>. Three internal participants took part. In the oncoming-vehicle scenario the car held 13 to 14 mph while being steered around the hazard, and in the roundabout scenario it slowed from 9 to 4 mph. This is a feasibility demonstration, not a formal evaluation. The full deployment is shown in <a href="#videos">Video 3</a>.</p>
+
+  <figure>
+    <span class="tag intent">With intent</span>
+    <video class="loopvid" muted loop playsinline preload="metadata" poster="img/grip_firstperson.jpg" aria-label="Driver's-eye view of a second GRIP encounter with the intent-conditioned assistant"><source src="video/grip_firstperson.mp4" type="video/mp4"></video>
+    <figcaption><b>Another GRIP encounter.</b> Driver's-eye view with the intent-conditioned assistant. The green dashed line shows its planned path.</figcaption>
+  </figure>
+
+
+  <figure>
+    <img src="img/grip_steering.jpg" alt="Filmstrip of the GRIP oncoming-car scenario showing lateral assistance">
+    <img src="img/grip_braking.jpg" alt="Filmstrip of the GRIP roundabout approach showing longitudinal assistance" style="margin-top:10px">
+    <figcaption>Two GRIP sequences: lateral assistance around an oncoming car (top) and longitudinal assistance on a roundabout approach (bottom). Drivers feel deceleration through the vehicle's real motion, which they cannot on a fixed simulator.</figcaption>
+  </figure>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos">
+  <h2>Supplementary videos</h2>
+  <p class="muted">Montages of representative trials from each study.</p>
+  <!-- To host a video on YouTube instead, paste its video ID below. The slot swaps to an embedded player. -->
+  <div class="vgrid">
+    <figure>
+      <div class="vslot" data-yt="eval1">
+        <video controls preload="metadata" poster="img/poster_eval1_racing.jpg"><source src="video/eval1_racing.mp4" type="video/mp4"></video>
+      </div>
+      <figcaption><b>Video 1.</b> Racing characterization (Eval 1).</figcaption>
+    </figure>
+    <figure>
+      <div class="vslot" data-yt="eval3">
+        <video controls preload="metadata" poster="img/poster_eval3_urban.jpg"><source src="video/eval3_urban.mp4" type="video/mp4"></video>
+      </div>
+      <figcaption><b>Video 2.</b> Urban validation (Eval 3), intent-conditioned condition.</figcaption>
+    </figure>
+    <figure>
+      <div class="vslot" data-yt="grip">
+        <video controls preload="metadata" poster="img/poster_grip.jpg"><source src="video/grip.mp4" type="video/mp4"></video>
+      </div>
+      <figcaption><b>Video 3.</b> GRIP deployment.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- TAKEAWAYS -->
+<section id="takeaways">
+  <h2>What we learned</h2>
+  <ul class="tight">
+    <li><b>Intent conditioning pays off in measurable ways.</b> It raised alignment with the driver's choice by 52% and cut collisions relative to an otherwise identical assistant.</li>
+    <li><b>The policy transfers.</b> The same weights ran on the GRIP test vehicle with no retraining, and the racing straights showed the same direction of benefit.</li>
+    <li><b>Real partners teach what simulated ones cannot.</b> Turn performance in racing traced to simulated drivers that were more repeatable than people. Human-data augmentation, smoothing, and reward restructuring moved it in the right direction.</li>
+    <li><b>Preference is individual.</b> A flat average rating hid drivers who strongly preferred each assistant, which motivates policies that adapt their intervention style per driver.</li>
+    <li><b>Open directions.</b> Intent is assumed fixed within an episode, the urban studies are small, and the GRIP result is feasibility only. Online intent transitions and a powered on-vehicle study are the natural next steps.</li>
+  </ul>
+</section>
+
+<!-- CITE -->
+<section id="cite">
+  <h2>Citation</h2>
+  <p>If you use this work, please cite the extended version (a final reference will be added when available):</p>
+  <button class="copy" type="button" data-target="bib-ext">Copy</button>
+<pre id="bib-ext">@misc{decastro2026dream2assist,
+  title   = {Dream to Assist: Intent-Conditioned World Models for Shared Vehicle Control},
+  author  = {DeCastro, Jonathan and Balch, Thomas and Sumner, Emily and Gopinath, Deepak and Dees, Laporsha and Reyes Gomez, Patricio and Weiss, Elliot and Applegate-Kenton, Megan and Rowell, Todd and Leonard, John and Balachandran, Avinash and Rosman, Guy},
+  year    = {2026},
+  note    = {Extended version of the CoRL 2024 paper. TODO: add arXiv identifier or final reference}
+}</pre>
+  <p>The initial version appeared at CoRL:</p>
+  <button class="copy" type="button" data-target="bib-corl">Copy</button>
+<pre id="bib-corl">@inproceedings{decastro2024dream2assist,
+  title     = {Dreaming to Assist: Learning to Align with Human Objectives for Shared Control in High-Speed Racing},
+  author    = {Jonathan DeCastro and Andrew Silva and Deepak Gopinath and Emily Sumner and Thomas M. Balch and Laporsha Dees and Guy Rosman},
+  booktitle = {8th Conference on Robot Learning (CoRL) 2024. Munich, Germany},
+  year      = {2024}
+}</pre>
+
+  <h3>Ethics</h3>
+  <p class="small muted">The human-subjects studies were conducted under the oversight of WCG IRB on behalf of Toyota Research Institute. Informed consent was obtained from all participants.</p>
+</section>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    Dream2Assist · Toyota Research Institute · <a href="https://dream2assist.github.io/">CoRL 2024 page</a> · <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+// YouTube IDs for the videos. Leave empty to keep the self-hosted copy.
+const YOUTUBE = { eval1: "", eval3: "", grip: "" };
+
+document.querySelectorAll('.vslot').forEach(function (slot) {
+  var id = YOUTUBE[slot.dataset.yt];
+  if (!id) return;
+  slot.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
+    '" title="Supplementary video" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+});
+
+// Short loops play only while visible, and not at all if the viewer prefers reduced motion.
+(function () {
+  var vids = document.querySelectorAll('video.loopvid');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { vids.forEach(function (v) { v.controls = true; }); return; }
+  if (!('IntersectionObserver' in window)) { vids.forEach(function (v) { v.controls = true; }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.play().catch(function () { e.target.controls = true; }); }
+      else { e.target.pause(); }
+    });
+  }, { threshold: 0.35 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+
+// Theme toggle (remembered per viewer when storage is available).
+(function () {
+  var root = document.documentElement, btn = document.getElementById('theme');
+  try { var t = localStorage.getItem('d2a-theme'); if (t) root.setAttribute('data-theme', t); } catch (e) {}
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') === 'dark' ||
+      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = dark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('d2a-theme', next); } catch (e) {}
+  });
+})();
+
+// Typeset math with KaTeX when it loads; the plain-HTML version stays as the fallback.
+window.addEventListener('load', function () {
+  if (!window.katex) return;
+  document.querySelectorAll('.tex').forEach(function (el) {
+    try {
+      window.katex.render(el.dataset.tex, el, { displayMode: el.dataset.display === '1', throwOnError: true });
+    } catch (e) { /* keep fallback */ }
+  });
+});
+
+// Copy buttons for BibTeX.
+document.querySelectorAll('.copy').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var el = document.getElementById(b.dataset.target);
+    if (navigator.clipboard) navigator.clipboard.writeText(el.innerText).then(function () {
+      b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+    });
+  });
+});
+</script>
+</body>
+</html>

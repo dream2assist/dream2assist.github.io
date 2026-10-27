@@ -109,6 +109,12 @@ figcaption b { color: var(--ink); }
 @media (max-width: 860px) { .stats { grid-template-columns: repeat(2, 1fr); } }
 
 /* callouts */
+.eyebrow { font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+.questions { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
+.questions li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; }
+.questions a { text-decoration: none; font-weight: 600; }
+.questions .where { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+.takeaways h3 { margin-top: 22px; }
 .callout { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 14px 18px; margin: 20px 0; }
 .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); border-left-color: var(--nointent); }
 .callout p:last-child { margin-bottom: 0; }
@@ -158,6 +164,7 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
     <a href="#urban">Urban</a>
     <a href="#grip">GRIP</a>
     <a href="#videos">Videos</a>
+    <a href="#takeaways">Takeaways</a>
     <a href="#cite">Cite</a>
     <span class="spacer"></span>
     <button id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
@@ -187,9 +194,8 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
     <p class="affil">Contact: Jonathan DeCastro, <a href="mailto:jonathan.decastro@tri.global">jonathan.decastro@tri.global</a></p>
 
     <div class="links">
-      <!-- TODO: set hrefs and remove class "soon" as each becomes available -->
-      <a class="btn primary soon" href="#" id="link-paper">Extended paper</a>
-      <a class="btn soon" href="#" id="link-arxiv">arXiv</a>
+      <a class="btn primary" href="https://arxiv.org/abs/2610.34650" id="link-paper">Paper (arXiv)</a>
+      <a class="btn" href="https://arxiv.org/pdf/2610.34650" id="link-pdf">PDF</a>
       <a class="btn" href="https://github.com/ToyotaResearchInstitute/dream2assist">Code (CoRL version)</a>
       <a class="btn" href="#videos">Videos</a>
       <a class="btn" href="#cite">BibTeX</a>
@@ -224,22 +230,35 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
 
 <div class="stats">
   <div class="stat"><div class="n">+52%</div><div class="l">more steering events aligned with the driver's chosen side</div><div class="s">215 vs 141, urban A/B</div></div>
-  <div class="stat"><div class="n">3.1% vs 8.5%</div><div class="l">of trials with a collision, intent vs no intent</div><div class="s">4/131 vs 10/118 trials</div></div>
-  <div class="stat"><!-- TODO: paper reports both 81%→90% (Sec. 6, Table 4, App. D.1) and 80%→88% (Sec. 7.1); reconcile during revision -->
-    <div class="n">80% → 88%</div><div class="l">overtake success on racing straights</div><div class="s">N = 24, trend (p = .069)</div></div>
+  <div class="stat"><div class="n">2.7% vs 7.7%</div><div class="l">of trials with a collision, intent vs no intent</div><div class="s">4/147 vs 10/130 trials</div></div>
+  <div class="stat"><!-- arXiv v1: 80%→89% per participant (Sec. 6.2, App. D.1, Fig. 14); Sec. 7.1 still says 80%→88%; pooled Table 4 is 0.810→0.899 -->
+    <div class="n">80% → 89%</div><div class="l">overtake success on racing straights</div><div class="s">per participant, n = 23, trend (p = .069)</div></div>
   <div class="stat"><div class="n">0</div><div class="l">retraining steps from simulator to the GRIP test vehicle</div><div class="s">feasibility, N = 3</div></div>
 </div>
 
 <!-- ABSTRACT -->
 <section id="abstract">
   <h2>Abstract</h2>
-  <p>Assistive agents in shared-control settings face a dual challenge: acting proactively to align with the human's intentions while remaining legible enough for the human to comprehend and fluently respond in real time. We present Dream2Assist, a model-based reinforcement learning framework for tightly-coupled shared decision making that addresses both sides of this challenge. Our approach extends a recurrent state-space world model with intent inference, enabling an assistive policy trained via fictitious co-play with the human to anticipate and support discrete human objectives without overriding human agency.</p>
+  <p>Assistive agents in shared-control settings face a dual challenge: acting proactively to align with the human's intentions while remaining legible enough for the human to comprehend and fluently respond in real time. We present Dream2Assist, a model-based reinforcement learning framework for tightly-coupled shared decision making that addresses both sides of this challenge. Our approach extends a recurrent state-space world model with intent inference, enabling an assistive policy trained via fictitious co-play to anticipate and support discrete human objectives without overriding human agency.</p>
   <p>Beyond the computational framework, we describe the full deployment pipeline needed to translate a world-model-based policy into a safe, human-centered system in a resource-efficient way. Crucially, we address the sim-to-real-human gap via policy down-selection and reward restructuring within an iterative human-machine interface design. We validate the framework through three human-subjects studies and a preliminary on-vehicle deployment spanning two qualitatively distinct domains: high-speed racing (N = 30) and urban driving with richer intent structure (N = 10). Our results demonstrate that intent conditioning yields measurable improvements in torque alignment and collision rate. We surface key design insights and practices for deploying learning-based assistive agents in safety-critical, real-time human-robot teaming.</p>
+</section>
+
+<!-- QUESTIONS -->
+<section id="questions">
+  <h2>The questions we set out to answer</h2>
+  <ol class="questions">
+    <li><a href="#method">Can an assistant infer what the driver is trying to do, and help in a way that fits?</a><span class="where">Method</span></li>
+    <li><a href="#pipeline">How do you take a policy trained with simulated partners to real people?</a><span class="where">Deployment pipeline</span></li>
+    <li><a href="#racing">Does the assistant help real drivers at speed, and where does it struggle?</a><span class="where">Racing · Evals 1 and 2</span></li>
+    <li><a href="#urban">Does inferring intent, by itself, make the assistant a better teammate?</a><span class="where">Urban driving · Eval 3, double-blind A/B</span></li>
+    <li><a href="#grip">Does the policy carry over to a real vehicle without retraining?</a><span class="where">GRIP · on-vehicle deployment</span></li>
+  </ol>
 </section>
 
 <!-- METHOD -->
 <section id="method">
-  <h2>Method: a world model that knows what you are trying to do</h2>
+  <p class="eyebrow">Method</p>
+  <h2>Can an assistant infer what the driver is trying to do, and help in a way that fits?</h2>
   <p class="lede">Dream2Assist gives an assistant a latent model of its human partner. The assistant reads the driver's behavior, infers a discrete objective such as <em>pass</em> versus <em>stay behind</em>, or <em>left</em> versus <em>right</em> around a hazard, and shapes its assistance to fit.</p>
 
   <figure class="fig-plain">
@@ -272,7 +291,8 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
 
 <!-- PIPELINE -->
 <section id="pipeline">
-  <h2>From simulation to a system people can use</h2>
+  <p class="eyebrow">Deployment pipeline</p>
+  <h2>How do you take a policy trained with simulated partners to real people?</h2>
   <p>A policy that works with simulated partners is not yet a system that works with people. The paper contributes a deployment pipeline that combines automated policy screening, counterfactual log replay, and human-in-the-loop vetting with an interface-design process that is resolved before policy quality is formally evaluated.</p>
   <figure class="fig-plain">
     <img src="img/workflow.png" alt="Workflow diagram showing iterative policy refinement and iterative interface piloting" loading="lazy">
@@ -282,7 +302,9 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
 
 <!-- STUDIES -->
 <section id="studies">
-  <h2>Two domains, three studies, one on-vehicle deployment</h2>
+  <p class="eyebrow">Studies</p>
+  <h2>Where did we test it?</h2>
+  <p>Two domains, three human-subjects studies, and one on-vehicle deployment.</p>
   <figure>
     <img src="img/domains.jpg" alt="Left: CARLA racing scene at Thunderhill. Right: top-down view of the Unreal Engine town map" loading="lazy">
     <figcaption><b>Racing</b> (left, CARLA, Thunderhill Raceway West track) is fast and time-pressured with two intents: pass or stay behind. <b>Urban</b> (right, Unreal Engine town map, 70 × 70 m) is surprise-rich, with a wrong-way vehicle, a driveway pop-out, and a roundabout. Urban intents are left or right around the hazard in the studies reported here.</figcaption>
@@ -304,13 +326,15 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
 
 <!-- RACING -->
 <section id="racing">
-  <h2>Racing: strong on straights, and a clear path on turns</h2>
+  <p class="eyebrow">Racing · Evals 1 and 2</p>
+  <h2>Does the assistant help real drivers at speed, and where does it struggle?</h2>
+  <p class="lede">It helps on straights. Turns exposed a gap between simulated and real partners, and targeted refinements moved the policy in the right direction.</p>
 
   <h3>Eval 1: characterization (N = 24)</h3>
-  <p>Drivers attempted eight overtakes of increasing difficulty, each with and without assistance. On straights, assistance raised overtake success from 80% to 88% (p = .069) and increased both overtake speed and minimum clearance to the opponent. Turns were harder: overtake success was lower with assistance (about 55% without, about 27% with), as was clearance. Inspecting the assistive inputs pointed to over-steering just before the turn, which gave us a specific target for refinement.</p>
+  <p>Drivers attempted eight overtakes of increasing difficulty, each with and without assistance. On straights, assistance raised per-participant overtake success from 80% to 89% (p = .069, n = 23) and increased minimum clearance to the opponent (+0.47 m). Turns were harder: per-participant overtake success fell from 51% to 21% (p &lt; .001), and minimum clearance fell from 1.99 m to 1.01 m. Inspecting the assistive inputs pointed to over-steering just before the turn, which gave us a specific target for refinement.</p>
   <figure class="fig-plain">
-    <img src="img/eval1_overtake_by_track.png" alt="Bar chart of mean overtake rate by track type for no policy and policy" loading="lazy" style="max-width:520px;margin:auto">
-    <figcaption><b>Overtake rate by track type</b> in Eval 1. Assistance helped on straights, and turns revealed what to refine.</figcaption>
+    <img src="img/fig14_eval1_overtake.png" alt="Per-participant overtake rate without and with the policy, on straights (80% to 89%) and turns (51% to 21%)" loading="lazy" style="max-width:600px;margin:auto">
+    <figcaption><b>Overtake rate per participant</b> in Eval 1 (n = 23 with both conditions). Thin lines are participants and the thick line is the mean. Assistance helped on straights, and turns revealed what to refine.</figcaption>
   </figure>
   <figure>
     <div class="pair">
@@ -333,16 +357,23 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
   </div>
 
   <h3>Eval 2: targeted refinement (N = 6)</h3>
-  <p>The refinements were human-data augmentation, output smoothing, and reward restructuring that penalizes collapse to a single intent. The refinements moved the policy in the intended direction: net intent-aligned steering torque improved by about 1.1 Nm (paired t-test, p = .049), the refined policy was preferred on 16 of 27 trials and on a majority of turn trials, and likability rose (3.31 vs 2.95). The pilot is small and aimed at direction rather than significance, so the likability and preference differences are not statistically significant.</p>
-  <figure class="fig-plain">
-    <img src="img/eval2_torque_traces.png" alt="Event-locked average torque traces for the initial and refined policies leading up to an overtake" loading="lazy" style="max-width:640px;margin:auto">
-    <figcaption><b>Torque leading up to the overtake</b> (time-aligned at t = 0). The refined policy produces more intent-aligned torque and less intent-opposing torque than the initial one.</figcaption>
-  </figure>
+  <p>The refinements were human-data augmentation, output smoothing, and reward restructuring that penalizes collapse to a single intent. The refinements moved the policy in the intended direction. The refined policy was preferred on 16 of 27 trials (59%), on both straights and turns, and likability rose (3.31 vs 2.95). The gap between intent-aligned and intent-opposing AI steering narrowed (from −10.1° to −5.6°, better for 3 of 5 participants), and on turns the initial policy applied roughly twice the steering of the refined one in the seconds before the overtake (about 50° vs 25°). The pilot is small and aimed at direction rather than significance, so none of these differences is statistically significant.</p>
+  <div class="pair" style="margin:22px 0;align-items:start">
+    <figure class="fig-plain">
+      <img src="img/fig7_eval2_preference.png" alt="Bar chart of trial preferences: refined preferred on 62% of straight trials, 57% of turn trials, 59% of all trials" loading="lazy">
+      <figcaption><b>Which policy drivers preferred</b>, by where the overtake happened. The refined policy was preferred on 59% of trials (16 of 27).</figcaption>
+    </figure>
+    <figure class="fig-plain">
+      <img src="img/fig6_eval2_steering.png" alt="Averaged AI steering magnitude and signed steering around overtake onset for the initial and refined policies" loading="lazy">
+      <figcaption><b>AI steering around the overtake</b> (onset at t = 0), all participants and segments. Top: steering magnitude. Bottom: signed steering. Lines show mean ± SEM.</figcaption>
+    </figure>
+  </div>
 </section>
 
 <!-- URBAN -->
 <section id="urban">
-  <h2>Urban: isolating the effect of intent</h2>
+  <p class="eyebrow">Urban driving · Eval 3</p>
+  <h2>Does inferring intent, by itself, make the assistant a better teammate?</h2>
   <p class="lede">Eval 3 is the cleanest test. Same architecture, same rewards, same safety layer, and the intent predictor is the only difference. Participants did not know which assistant they were driving.</p>
 
   <h3>The hazards, driven without assistance</h3>
@@ -382,30 +413,34 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
   <div class="pair" style="margin:22px 0">
     <figure class="fig-plain">
       <img src="img/fig_torque_alignment_total_all12.png" alt="Bar chart of torque alignment events: 215 with intent, 141 without, plus 52 percent" loading="lazy" style="max-height:420px;width:auto;margin:auto">
-      <figcaption><b>Alignment.</b> Torque-alignment events with the driver's chosen side: 215 vs 141 (+52%).</figcaption>
+      <figcaption><b>Alignment.</b> Torque-alignment events with the driver's chosen side: 215 vs 141 (+52%) over all 12 sessions, higher with intent for 8 of the 11 participants who drove both.</figcaption>
     </figure>
     <figure class="fig-plain">
-      <img src="img/fig_collision_rate.png" alt="Bar chart of collision rate: 3.1 percent with intent, 8.5 percent without intent, 0 percent with no policy" loading="lazy" style="max-height:420px;width:auto;margin:auto">
-      <figcaption><b>Collisions.</b> 3.1% (4/131) with intent, 8.5% (10/118) without, and 0% (0/66) with no assistance.</figcaption>
+      <img src="img/fig_collision_rate.png" alt="Bar chart of collision rate: 2.7 percent with intent, 7.7 percent without intent, 1.7 percent with no policy" loading="lazy" style="max-height:420px;width:auto;margin:auto">
+      <figcaption><b>Collisions.</b> 2.7% (4/147) with intent, 7.7% (10/130) without, and 1.7% (2/121) with no assistance.</figcaption>
     </figure>
   </div>
 
   <div class="callout">
-    <h3>Steers with the driver, and collisions more than halved</h3>
-    <p>With intent, the assistant steers with the driver and responds earlier, before the oncoming car passes. Without intent, it steers against the driver's chosen direction on average (see the torque traces for participant 03 below).</p>
-    <p>Conditioning on intent cut collisions from 8.5% to 3.1% relative to the otherwise identical no-intent assistant. The unassisted baseline recorded none. We attribute the remaining assisted collisions to a mix of risk compensation (people drove more aggressively when assisted) and residual policy errors at close range, and separating the two is a natural next step.</p>
+    <h3>Steers with the driver, and collisions cut by about two-thirds</h3>
+    <p>With intent, the assistant steers with the driver earlier on the approach. From about 3 to 1.5 s before the closest approach to the oncoming car, it was less misaligned with the driver than the no-intent assistant for all seven participants with usable traces. Without intent, it steers against the driver's chosen direction on average. In the final second the order flips for five of the seven, so the difference is concentrated in the approach (see participant 03 below).</p>
+    <p>Conditioning on intent cut collisions from 7.7% to 2.7% of trials relative to the otherwise identical no-intent assistant. Unassisted driving had 1.7%. Collisions were concentrated: they occurred for four of the ten participants, and one participant accounts for 8 of the 16. We attribute the remaining assisted collisions to a mix of risk compensation (people drove more aggressively when assisted) and residual policy errors at close range, and separating the two is a natural next step.</p>
   </div>
 
   <figure class="fig-plain">
-    <img src="img/eval3_p03_traces.png" alt="Averaged torque traces for participant 03 during the oncoming-car event, with and without intent" loading="lazy" style="max-width:640px;margin:auto">
-    <figcaption><b>One driver, one event.</b> Averaged torque for participant 03 as an oncoming car approaches (time-aligned at t = 0). Before the closest approach the no-intent policy steers, on average, against the driver's goal, while the intent-conditioned policy rises above neutral earlier.</figcaption>
+    <img src="img/fig8_p03_traces.png" alt="Averaged torque traces for participant 03 during the oncoming-car event, with and without intent" loading="lazy" style="max-width:640px;margin:auto">
+    <figcaption><b>One driver, one event.</b> Averaged torque for participant 03 as an oncoming car approaches (closest approach at t = 0). About 2.3 to 1.5 s before closest approach, the intent-conditioned assistant steers away from the oncoming car, in line with the driver's avoidance, while the no-intent assistant steers toward it (bottom trace). In the final second the pattern reverses.</figcaption>
   </figure>
 
   <h3>Ratings reveal individual preferences</h3>
-  <p>Mean ratings were similar for the two assistants (about 6.1 vs 6.2 out of 10), with no significant difference on any of seven Likert dimensions. The averages hide a real split: drivers divided almost evenly, and each assistant had clear fans. The largest single-driver difference (2.75 points) is more than twenty times the change in the mean, which makes personalization a promising direction.</p>
+  <p>Mean ratings were similar for the two assistants (6.05 vs 6.18 out of 10), with no significant difference on any of seven Likert dimensions. The averages hide a real split: five drivers rated each assistant higher, and each assistant had clear fans. The largest single-driver difference (2.75 points) is more than twenty times the change in the mean, which makes personalization a promising direction.</p>
   <figure class="fig-plain">
-    <img src="img/fig_same_drivers_two_pictures.png" alt="Two panels of per-participant lines. Left: torque-alignment events, with intent higher for most participants. Right: overall rating, split between participants." loading="lazy">
-    <figcaption><b>Same drivers, two pictures.</b> Left: torque alignment per participant favors the intent-conditioned assistant. Right: overall ratings scatter in both directions around a flat mean. These panels use the 10 analyzed participants, so the totals differ from the all-participant counts above.</figcaption>
+    <img src="img/fig9_eval3_alignment.png" alt="Four panels: total torque alignment events 215 vs 141; events per participant, mean 17.6 vs 12.8; mean torque per participant; aligned minus misaligned torque per participant" loading="lazy">
+    <figcaption><b>Alignment, per participant.</b> (a) Total and per-participant torque-alignment events, (b) mean torque, and (c) aligned minus misaligned torque in the oncoming-car event. With intent, 8 participants had more alignment events (2 tied, 1 fewer), and 8 of the 11 who drove both conditions experienced more intent-aligned torque.</figcaption>
+  </figure>
+  <figure class="fig-plain">
+    <img src="img/fig_per_participant_rating.png" alt="Per-participant overall ratings for the two assistants: five higher for each, means 6.05 and 6.18" loading="lazy" style="max-width:560px;margin:auto">
+    <figcaption><b>Ratings, per participant.</b> The same drivers' overall ratings split evenly: five rated each assistant higher, around nearly identical means (6.05 vs 6.18).</figcaption>
   </figure>
 
   <p>Open-ended feedback did separate the two policies, and the comments show the disagreement directly:</p>
@@ -417,7 +452,8 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
 
 <!-- GRIP -->
 <section id="grip">
-  <h2>GRIP: a first step onto a real vehicle</h2>
+  <p class="eyebrow">GRIP · on-vehicle deployment</p>
+  <h2>Does the policy carry over to a real vehicle without retraining?</h2>
   <p>We ran the urban scenario on GRIP, a real test vehicle on a track that emulates the simulator's vehicle dynamics, with the driving scene rendered in VR and force-feedback steering. The driver feels the car's actual motion. The same policy weights and intent space as Eval 3 were used, with minimal parameter changes for the steering hardware and <b>no retraining</b>. Three internal participants took part. In the oncoming-vehicle scenario the car held 13 to 14 mph while being steered around the hazard, and in the roundabout scenario it slowed from 9 to 4 mph. This is a feasibility demonstration, not a formal evaluation. The full deployment is shown in <a href="#videos">Video 3</a>.</p>
 
   <figure>
@@ -462,27 +498,38 @@ footer.site { margin-top: 60px; border-top: 1px solid var(--line); padding: 26px
 </section>
 
 <!-- TAKEAWAYS -->
-<section id="takeaways">
-  <h2>What we learned</h2>
+<section id="takeaways" class="takeaways">
+  <h2>Takeaways and open questions</h2>
+  <h3>Takeaways</h3>
   <ul class="tight">
-    <li><b>Intent conditioning pays off in measurable ways.</b> It raised alignment with the driver's choice by 52% and cut collisions relative to an otherwise identical assistant.</li>
-    <li><b>The policy transfers.</b> The same weights ran on the GRIP test vehicle with no retraining, and the racing straights showed the same direction of benefit.</li>
-    <li><b>Real partners teach what simulated ones cannot.</b> Turn performance in racing traced to simulated drivers that were more repeatable than people. Human-data augmentation, smoothing, and reward restructuring moved it in the right direction.</li>
-    <li><b>Preference is individual.</b> A flat average rating hid drivers who strongly preferred each assistant, which motivates policies that adapt their intervention style per driver.</li>
-    <li><b>Open directions.</b> Intent is assumed fixed within an episode, the urban studies are small, and the GRIP result is feasibility only. Online intent transitions and a powered on-vehicle study are the natural next steps.</li>
+    <li><b>Inferring intent makes the assistant a better teammate, measurably.</b> Against an otherwise identical assistant, intent conditioning produced 52% more steering aligned with the driver's chosen side and cut collisions from 7.7% to 2.7% of trials.</li>
+    <li><b>Assistance is light by default.</b> It stays small when the driver already drives like an intent-aligned expert, grows as the driver departs from that expert, and ramps down when the system is less certain of the driver's intent. This follows from the reward, not from a hand-coded rule.</li>
+    <li><b>A learned policy can reach real drivers through a structured pipeline.</b> Automated screening, counterfactual log replay, and human-in-the-loop testing, paired with interface design, took the policy from simulated partners to human studies and onto a real vehicle with no retraining.</li>
+    <li><b>Real partners expose gaps that simulated ones hide.</b> Racing turns revealed that simulated drivers were more repeatable than people. Human-data augmentation, smoothing, and reward restructuring moved the policy in the right direction.</li>
+    <li><b>Average ratings hide strong individual preferences.</b> Drivers split evenly on which assistant they preferred, even though the intent-conditioned one was objectively better aligned.</li>
+  </ul>
+  <h3>Open questions</h3>
+  <ul class="tight">
+    <li><b>Changing intent.</b> Intent is assumed fixed within an episode. How should the assistant track a driver who changes their mind mid-maneuver?</li>
+    <li><b>Personalization.</b> Can the assistant adapt its intervention style to each driver's preferred level of autonomy?</li>
+    <li><b>Risk compensation.</b> How much of the remaining assisted collisions comes from drivers taking more risk when assisted, and how much from residual policy error?</li>
+    <li><b>Scale and realism.</b> Do the results hold in a larger, powered on-vehicle study? The urban studies are small, and the GRIP result is a feasibility demonstration.</li>
   </ul>
 </section>
 
 <!-- CITE -->
 <section id="cite">
   <h2>Citation</h2>
-  <p>If you use this work, please cite the extended version (a final reference will be added when available):</p>
+  <p>If you use this work, please cite the extended version:</p>
   <button class="copy" type="button" data-target="bib-ext">Copy</button>
 <pre id="bib-ext">@misc{decastro2026dream2assist,
   title   = {Dream to Assist: Intent-Conditioned World Models for Shared Vehicle Control},
   author  = {DeCastro, Jonathan and Balch, Thomas and Sumner, Emily and Gopinath, Deepak and Dees, Laporsha and Reyes Gomez, Patricio and Weiss, Elliot and Applegate-Kenton, Megan and Rowell, Todd and Leonard, John and Balachandran, Avinash and Rosman, Guy},
   year    = {2026},
-  note    = {Extended version of the CoRL 2024 paper. TODO: add arXiv identifier or final reference}
+  eprint  = {2610.34650},
+  archivePrefix = {arXiv},
+  url     = {https://arxiv.org/abs/2610.34650},
+  note    = {Extended version of the CoRL 2024 paper}
 }</pre>
   <p>The initial version appeared at CoRL:</p>
   <button class="copy" type="button" data-target="bib-corl">Copy</button>
